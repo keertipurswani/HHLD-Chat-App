@@ -16,6 +16,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "http": "^0.0.1-security",
+    "mongoose": "^8.3.2",
     "socket.io": "^4.7.5"
   },
   "devDependencies": {
