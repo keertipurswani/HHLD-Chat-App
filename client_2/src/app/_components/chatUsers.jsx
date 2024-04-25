@@ -18,7 +18,7 @@ const ChatUsers = () => {
       useEffect(() => {
         const getMsgs = async () => {
             console.log('getting msgs------------');
-            const res = await axios.get('http://localhost:8080/msgs',
+            const res = await axios.get(`${process.env.NEXT_PUBLIC_BE_HOST}:8080/msgs`,
                 {
                     params: {
                         'sender': authName,

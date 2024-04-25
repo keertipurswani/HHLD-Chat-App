@@ -29,7 +29,7 @@ const Chat = () => {
 
 
    useEffect(() => {
-       const newSocket = io(`${process.env.NEXT_PUBLIC_BE_HOST}:8080`, {
+       const newSocket = io(`${process.env.NEXT_PUBLIC_BE_HOST}:8084`, {
             query: {
                username: authName
            }

@@ -6,6 +6,8 @@ import cors from "cors";
 import msgsRouter from "./routes/msgs.route.js"
 import connectToMongoDB from "./db/connectTOMongoDB.js";
 import { addMsgToConversation } from "./controllers/msgs.controller.js";
+import { subscribe, publish } from "./redis/msgsPubSub.js";
+
 
 
 dotenv.config();
@@ -29,6 +31,14 @@ io.on('connection', (socket) => {
 
     userSocketMap[username] = socket;
 
+
+    const channelName = `chat_${username}`
+    subscribe(channelName, (msg) => {
+          console.log('Received message:', msg);
+          socket.emit("chat msg", JSON.parse(msg));
+    });
+
+
     socket.on('chat msg', (msg) => {
         console.log(msg.sender);
         console.log(msg.receiver);
@@ -36,8 +46,14 @@ io.on('connection', (socket) => {
         console.log(msg);
         const receiverSocket = userSocketMap[msg.receiver];
         if(receiverSocket) {
+          //both sender and receiver are connected to same BE
           receiverSocket.emit('chat msg', msg);
+        } else {
+          // sender and receiver on diff BEs, so we need to use pubsub
+          const channelName = `chat_${msg.receiver}`
+          publish(channelName, JSON.stringify(msg));
         }
+
         addMsgToConversation([msg.sender, msg.receiver], {
                   text: msg.text,
                   sender:msg.sender,

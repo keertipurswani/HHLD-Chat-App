@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+ backend:
+   image: educosys/chat-backend:latest
+   build:
+     context: ./backend # Path to the backend Dockerfile
+   ports:
+     - "8080:8080"
+
+
+ backend2:
+   image: educosys/chat-backend2:lts
+   build:
+     context: ./backend # Path to the backend Dockerfile
+   ports:
+     - "8084:8080"
+
+
+ auth-backend:
+   image: educosys/chat-auth-backend:lts
+   build:
+     context: ./auth-backend # Path to the auth backend Dockerfile
+   ports:
+     - "8081:8081" 
+
+
+ frontend:
+   image: educosys/chat-client:lts
+   build:
+     context: ./client # Path to the frontend Dockerfile
+   ports:
+     - "3000:3000"
+   depends_on:
+     - backend # Wait for backend service to be ready before starting frontend
+
+
+ frontend2:
+   image: educosys/chat-client2:lts
+   build:
+     context: ./client_2 # Path to the frontend Dockerfile
+   ports:
+     - "3001:3000"
+   depends_on:
+     - backend # Wait for backend service to be ready before starting frontend
+
+
+
